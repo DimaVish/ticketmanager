@@ -1,5 +1,6 @@
 package com.smartticket.ticketmanager.service;
 
+import com.smartticket.ticketmanager.dto.FineDTO;
 import com.smartticket.ticketmanager.repository.FineRepository;
 import com.smartticket.ticketmanager.repository.UserRepository;
 import com.smartticket.ticketmanager.repository.entities.Fine;
@@ -17,6 +18,10 @@ public class FineService {
     private final FineRepository fineRepository;
     private final UserRepository userRepository;
 
+    public List<Fine> getAllFines() {
+        return fineRepository.findAll();
+    }
+
     public List<Fine> getFinesForUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         return fineRepository.findByUser(user);
@@ -29,6 +34,18 @@ public class FineService {
         fine.setValue(value);
         fine.setPaid(false); // Initially, the fine is not paid
         return fineRepository.save(fine);
+    }
+
+    public Fine updateFine(Long fineId, FineDTO fineDTO) {
+        Fine fine = fineRepository.findById(fineId).orElseThrow(() -> new RuntimeException("Ticket not found"));
+        fine.setPaid(fineDTO.isPaid());
+        fine.setValue(fineDTO.getValue());
+        fine.setPaymentMethod(fineDTO.getPaymentMethod());
+        return fineRepository.save(fine);
+    }
+
+    public void deleteFine(Long fineId) {
+        fineRepository.deleteById(fineId);
     }
 
     public Fine payFine(Long fineId, String paymentMethod) {
