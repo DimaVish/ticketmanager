@@ -1,34 +1,33 @@
-package com.smartticket.ticketmanager.security;
+package com.smartticket.ticketmanager.security.model;
 
-import com.smartticket.ticketmanager.repository.entities.Role;
 import com.smartticket.ticketmanager.repository.entities.User;
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
-public class CustomUserDetails implements UserDetails {
+public class CustomUserDetails extends User implements UserDetails {
 
-    @Getter
-    private final Long id;
-    private final String username;
-    private final String password;
-    @Getter
-    private final Role role;
+    private String username;
+    private String password;
+    Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(User user) {
-        this.id = user.getId();
-        this.username = user.getUsername();
-        this.password = user.getPassword();
-        this.role = user.getRole();
+    public CustomUserDetails(User byUsername) {
+        this.setId(byUsername.getId());
+        this.username = byUsername.getUsername();
+        this.password = byUsername.getPassword();
+        List<GrantedAuthority> auths = new ArrayList<>();
+        auths.add(new SimpleGrantedAuthority(byUsername.getRole().toString().toUpperCase()));
+
+        this.authorities = auths;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.name()));
+        return authorities;
     }
 
     @Override

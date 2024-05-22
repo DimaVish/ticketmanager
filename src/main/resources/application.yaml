@@ -16,6 +16,8 @@ spring:
     password: Dimosha1997
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-jwt:
-  secret: U2FsdGVkX1+FiYe3o7y2vT8i5/3rxlXyFzdxBbw1UUM=
-  expiration: 86400000
+security:
+  jwt:
+    secret-key: 3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b
+    # 1h in millisecond
+    expiration-time: 3600000

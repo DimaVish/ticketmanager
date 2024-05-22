@@ -52,22 +52,22 @@ public class TicketService {
     }
 
     public List<Ticket> getTicketsForPassenger(Long userId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User authenticatedUser = userRepository.findByUsername(authentication.getName());
-
-        if (!authenticatedUser.getId().equals(userId) && !authenticatedUser.getRole().equals(Role.ADMIN)) {
-            throw new RuntimeException("You are not authorized to view these tickets");
-        }
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        User authenticatedUser = userRepository.findByUsername(authentication.getName());
+//
+//        if (!authenticatedUser.getId().equals(userId) && !authenticatedUser.getRole().equals(Role.ADMIN)) {
+//            throw new RuntimeException("You are not authorized to view these tickets");
+//        }
 
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         return ticketRepository.findByUser(user);
     }
 
     public Ticket purchaseTicket(TicketDTO ticketDTO) {
-        User authenticatedUser = getAuthenticatedUser();
+//        User authenticatedUser = getAuthenticatedUser();
 
         Ticket ticket = new Ticket();
-        ticket.setUser(authenticatedUser);
+//        ticket.setUser(authenticatedUser);
         ticket.setPurchaseDate(LocalDateTime.now());
         // Assume ticket expires in 1 hour for simulation
         ticket.setExpireTime(LocalDateTime.now().plusHours(1));
@@ -88,9 +88,9 @@ public class TicketService {
         return "QR_CODE_" + ticket.getId();
     }
 
-    private User getAuthenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return userRepository.findByUsername(authentication.getName());
-    }
+//    private User getAuthenticatedUser() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        return userRepository.findByUsername(authentication.getName());
+//    }
 }
 

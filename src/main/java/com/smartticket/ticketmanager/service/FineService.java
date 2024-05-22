@@ -5,6 +5,7 @@ import com.smartticket.ticketmanager.repository.FineRepository;
 import com.smartticket.ticketmanager.repository.UserRepository;
 import com.smartticket.ticketmanager.repository.entities.Fine;
 import com.smartticket.ticketmanager.repository.entities.User;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,11 +28,12 @@ public class FineService {
         return fineRepository.findByUser(user);
     }
 
-    public Fine createFine(Long userId, BigDecimal value) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+    public Fine createFine(Long fiscalId, FineDTO fineDTO) {
+        User fiscal = userRepository.findById(fiscalId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        User passenger = userRepository.findById(fineDTO.getUserId()).orElseThrow(() -> new EntityNotFoundException("User not found"));
         Fine fine = new Fine();
-        fine.setUser(user);
-        fine.setValue(value);
+        fine.setUser(passenger);
+        fine.setValue(fineDTO.getValue());
         fine.setPaid(false); // Initially, the fine is not paid
         return fineRepository.save(fine);
     }

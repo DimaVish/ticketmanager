@@ -5,6 +5,7 @@ import com.smartticket.ticketmanager.repository.entities.Fine;
 import com.smartticket.ticketmanager.service.FineService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,37 +21,39 @@ public class FineController {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('FISCAL')")
     @GetMapping
-    public List<Fine> getAllFines() {
-        return fineService.getAllFines();
+    public ResponseEntity<List<Fine>> getAllFines() {
+        return ResponseEntity.ok(fineService.getAllFines());
     }
 
     @PreAuthorize("hasRole('FISCAL')")
     @GetMapping("/user/{userId}")
-    public List<Fine> getFinesForUser(@PathVariable Long userId) {
-        return fineService.getFinesForUser(userId);
+    public ResponseEntity<List<Fine>> getFinesForUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(fineService.getFinesForUser(userId));
     }
 
-    @PreAuthorize("hasRole('FISCAL')")
-    @PostMapping("/create/{userId}")
-    public Fine createFine(@PathVariable Long userId, @RequestParam BigDecimal value) {
-        return fineService.createFine(userId, value);
+    @PreAuthorize("hasRole('ROLE_FISCAL') and #fiscalId == principal.id")
+    @PostMapping("/{fiscalId}/create")
+    public ResponseEntity<Fine> createFine(@PathVariable Long fiscalId, @RequestBody FineDTO fineDTO) {
+        return ResponseEntity.ok(fineService.createFine(fiscalId, fineDTO));
     }
 
-    @PreAuthorize("hasRole('FISCAL')")
+    @PreAuthorize("hasRole('ROLE_FISCAL') and #fiscalId == principal.id")
     @PutMapping("/{fineId}")
-    public Fine updateFine(@PathVariable Long fineId, @RequestBody @Valid FineDTO fineDTO) {
-        return fineService.updateFine(fineId, fineDTO);
+    public ResponseEntity<Fine> updateFine(@PathVariable Long fineId, @RequestBody @Valid FineDTO fineDTO) {
+        return ResponseEntity.ok(fineService.updateFine(fineId, fineDTO));
     }
 
-    @PreAuthorize("hasRole('FISCAL')")
+    @PreAuthorize("hasRole('ROLE_FISCAL') and #fiscalId == principal.id")
     @DeleteMapping("/{fineId}")
-    public void deleteFine(@PathVariable Long fineId) {
+    public ResponseEntity<Void> deleteFine(@PathVariable Long fineId) {
         fineService.deleteFine(fineId);
+        return ResponseEntity.ok().build();
     }
 
     @PreAuthorize("hasRole('PASSENGER')")
     @PostMapping("/pay/{fineId}")
-    public Fine payFine(@PathVariable Long fineId, @RequestParam String paymentMethod) {
-        return fineService.payFine(fineId, paymentMethod);
+    public ResponseEntity<Fine> payFine(@PathVariable Long fineId, @RequestParam String paymentMethod) {
+        Fine paidFine = fineService.payFine(fineId, paymentMethod);
+        return ResponseEntity.ok(paidFine);
     }
 }

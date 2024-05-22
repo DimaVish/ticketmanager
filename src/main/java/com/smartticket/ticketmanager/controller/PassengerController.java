@@ -1,5 +1,6 @@
 package com.smartticket.ticketmanager.controller;
 
+import com.smartticket.ticketmanager.dto.RegisterUserDto;
 import com.smartticket.ticketmanager.dto.UserDTO;
 import com.smartticket.ticketmanager.repository.entities.User;
 import com.smartticket.ticketmanager.service.PassengerService;
@@ -19,33 +20,34 @@ public class PassengerController {
     private final PassengerService passengerService;
     private final UserService userService;
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping
-    public User createPassenger(@RequestBody @Valid UserDTO userDTO) {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/create")
+    public User createPassenger(@RequestBody @Valid RegisterUserDto userDTO) {
         return passengerService.createPassenger(userDTO);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     public List<User> getAllPassengers() {
         return passengerService.getAllPassengers();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/{userId}")
     public User getPassengerById(@PathVariable Long userId) {
         return passengerService.getPassengerById(userId);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or (hasRole('PASSENGER') and #userId == principal.id)")
-    @PutMapping("/{userId}")
-    public User updatePassengerInfo(@PathVariable Long userId, @RequestBody @Valid UserDTO userDTO) {
-        return userService.updateUserInfo(userId, userDTO);
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("/{passengerId}")
+    public User updatePassengerInfo(@PathVariable Long passengerId, @RequestBody @Valid UserDTO userDTO) {
+        return userService.updateUserInfo(passengerId, userDTO);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or (hasRole('PASSENGER') and #userId == principal.id)")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{userId}")
     public void deletePassenger(@PathVariable Long userId) {
         userService.deleteUser(userId);
     }
+
 }

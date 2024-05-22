@@ -2,6 +2,7 @@ package com.smartticket.ticketmanager.controller;
 
 import com.smartticket.ticketmanager.dto.UserDTO;
 import com.smartticket.ticketmanager.repository.entities.User;
+import com.smartticket.ticketmanager.dto.RegisterUserDto;
 import com.smartticket.ticketmanager.service.FiscalService;
 import com.smartticket.ticketmanager.service.UserService;
 import jakarta.validation.Valid;
@@ -21,7 +22,7 @@ public class FiscalController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public User createFiscal(@RequestBody @Valid UserDTO userDTO) {
+    public User createFiscal(@RequestBody @Valid RegisterUserDto userDTO) {
         return fiscalService.createFiscal(userDTO);
     }
 

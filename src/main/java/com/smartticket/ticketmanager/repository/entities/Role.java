@@ -1,5 +1,5 @@
 package com.smartticket.ticketmanager.repository.entities;
 
 public enum Role {
-    ADMIN, FISCAL, PASSENGER
+    ROLE_ADMIN, ROLE_FISCAL, ROLE_PASSENGER
 }
