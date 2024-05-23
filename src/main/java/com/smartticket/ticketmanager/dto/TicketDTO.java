@@ -10,7 +10,7 @@ public class TicketDTO {
     @NotNull
     private Long userId;
     @NotNull
-    private Long ticketId;
+    private Long tripId;
     @NotNull
     private LocalDateTime purchaseDate;
     @NotNull

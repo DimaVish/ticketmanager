@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -21,7 +21,7 @@ public class TripController {
 
     private final TripService tripService;
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('ROLE_PASSENGER') and #tripDTO.passengerId == principal.id)")
     @PostMapping
     public ResponseEntity<Trip> createTrip(@RequestBody @Valid TripDTO tripDTO) {
         return new ResponseEntity<>(tripService.createTrip(tripDTO), HttpStatus.CREATED);
@@ -29,7 +29,7 @@ public class TripController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{tripId}")
-    public ResponseEntity<Trip> updateTrip(@PathVariable Long tripId, @RequestBody @Valid TripDTO tripDTO) {
+    public ResponseEntity<Trip> updateTrip(@PathVariable Long tripId, @RequestBody TripDTO tripDTO) {
         return ResponseEntity.ok(tripService.updateTrip(tripId, tripDTO));
     }
 
@@ -42,7 +42,7 @@ public class TripController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/by-date")
-    public ResponseEntity<List<Trip>> findTripsByDate(@RequestParam Date date, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<List<Trip>> findTripsByDate(@RequestParam LocalDate date, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         List<Trip> trips = tripService.findTripsByDate(date, page, size);
         return new ResponseEntity<>(trips, HttpStatus.OK);
     }

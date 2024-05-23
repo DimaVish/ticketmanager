@@ -1,11 +1,12 @@
 package com.smartticket.ticketmanager.repository.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -15,7 +16,8 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Table(name = "users")
 public class User {
 
@@ -52,12 +54,12 @@ public class User {
     @Column(name = "updated_at")
     private Date updatedAt;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "passenger", fetch = FetchType.LAZY)
-    @JsonBackReference
     private List<Fine> fines;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    @JsonBackReference
     private List<Ticket> tickets;
 }
 

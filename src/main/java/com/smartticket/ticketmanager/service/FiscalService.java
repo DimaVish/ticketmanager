@@ -1,8 +1,9 @@
 package com.smartticket.ticketmanager.service;
 
 import com.smartticket.ticketmanager.dto.RegisterUserDto;
+import com.smartticket.ticketmanager.dto.UserDTO;
+import com.smartticket.ticketmanager.mappper.TicketManagerMapper;
 import com.smartticket.ticketmanager.repository.entities.Role;
-import com.smartticket.ticketmanager.repository.entities.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,19 +14,20 @@ import java.util.List;
 public class FiscalService {
 
     private final UserService userService;
+    private final TicketManagerMapper mapper;
 
     // Create a new fiscal user
-    public User createFiscal(RegisterUserDto userDTO) {
-        return userService.createUser(userDTO, Role.ROLE_FISCAL);
+    public UserDTO createFiscal(RegisterUserDto userDTO) {
+        return mapper.toUserDTO(userService.createUser(userDTO, Role.ROLE_FISCAL));
     }
 
     // Get all fiscals
-    public List<User> getAllFiscals() {
-        return userService.findAllUsersByRole(Role.ROLE_FISCAL);
+    public List<UserDTO> getAllFiscals() {
+        return mapper.toUserDTOList(userService.findAllUsersByRole(Role.ROLE_FISCAL));
     }
 
     // Get a specific fiscal by ID
-    public User getFiscalById(Long userId) {
-        return userService.findUserById(userId);
+    public UserDTO getFiscalById(Long userId) {
+        return mapper.toUserDTO(userService.findUserById(userId));
     }
 }

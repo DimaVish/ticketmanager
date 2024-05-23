@@ -2,12 +2,14 @@ package com.smartticket.ticketmanager.repository.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "trips")
 public class Trip {
     @Id
@@ -20,8 +22,7 @@ public class Trip {
     @Column(nullable = false)
     private LocalDateTime dateTime;
 
-    @OneToOne
-    @JoinColumn(name = "ticket_id", referencedColumnName = "id")
+    @OneToOne(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
     private Ticket ticket;
 

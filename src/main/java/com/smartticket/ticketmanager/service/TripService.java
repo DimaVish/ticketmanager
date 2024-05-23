@@ -4,6 +4,7 @@ import com.smartticket.ticketmanager.dto.TripDTO;
 import com.smartticket.ticketmanager.exception.BusinessException;
 import com.smartticket.ticketmanager.repository.TripRepository;
 import com.smartticket.ticketmanager.repository.entities.Trip;
+import com.smartticket.ticketmanager.repository.entities.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -11,26 +12,30 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class TripService {
 
     private final TripRepository tripRepository;
-
+    private final UserService userService;
 
     public Trip createTrip(TripDTO tripDTO) {
 
-        if (tripRepository.findByRoute(tripDTO.getRoute()).isPresent()) {
+        Optional<Trip> tripByRoute = tripRepository.findByRoute(tripDTO.getRoute());
+        if (tripByRoute.isPresent()) {
             throw new BusinessException(HttpStatus.NON_AUTHORITATIVE_INFORMATION, "Trip already exists");
         }
+        User passenger = userService.findUserById(tripDTO.getPassengerId());
 
         Trip trip = new Trip();
         trip.setRoute(tripDTO.getRoute());
         trip.setDateTime(tripDTO.getDateTime());
+        trip.setPassenger(passenger);
+
         return tripRepository.save(trip);
     }
 
@@ -51,13 +56,12 @@ public class TripService {
     }
 
     public Trip findTripById(Long travelId) {
-        return tripRepository.findById(travelId).orElseThrow(() -> new EntityNotFoundException("Trip Not Found"));
+        return tripRepository.findById(travelId).orElse(null);
     }
 
-    public List<Trip> findTripsByDate(Date date, int page, int size) {
-        Instant instant = date.toInstant();
+    public List<Trip> findTripsByDate(LocalDate date, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return tripRepository.findAllByDateTime(instant, pageable).getContent();
+        return tripRepository.findByDate(date, pageable).getContent();
     }
 
     public List<Trip> findAllTrips(int page, int size) {
@@ -66,7 +70,12 @@ public class TripService {
     }
 
     public void deleteTrip(Long tripId) {
+
+        // Now delete the trip
         tripRepository.deleteById(tripId);
     }
 
+    public void updateTripWithTicket(Trip trip) {
+        tripRepository.save(trip);
+    }
 }

@@ -2,11 +2,11 @@ package com.smartticket.ticketmanager.controller;
 
 import com.smartticket.ticketmanager.dto.RegisterUserDto;
 import com.smartticket.ticketmanager.dto.UserDTO;
-import com.smartticket.ticketmanager.repository.entities.User;
 import com.smartticket.ticketmanager.service.FiscalService;
 import com.smartticket.ticketmanager.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,31 +22,32 @@ public class FiscalController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public User createFiscal(@RequestBody @Valid RegisterUserDto userDTO) {
-        return fiscalService.createFiscal(userDTO);
+    public ResponseEntity<UserDTO> createFiscal(@RequestBody @Valid RegisterUserDto userDTO) {
+        return ResponseEntity.ok(fiscalService.createFiscal(userDTO));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public List<User> getAllFiscals() {
-        return fiscalService.getAllFiscals();
+    public ResponseEntity<List<UserDTO>> getAllFiscals() {
+        return ResponseEntity.ok(fiscalService.getAllFiscals());
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{userId}")
-    public User getFiscalById(@PathVariable Long userId) {
-        return fiscalService.getFiscalById(userId);
+    public ResponseEntity<UserDTO> getFiscalById(@PathVariable Long userId) {
+        return ResponseEntity.ok(fiscalService.getFiscalById(userId));
     }
 
     @PreAuthorize("hasRole('ADMIN') or (hasRole('FISCAL') and #userId == principal.id)")
     @PutMapping("/{userId}")
-    public User updateFiscalInfo(@PathVariable Long userId, @RequestBody @Valid UserDTO userDTO) {
-        return userService.updateUserInfo(userId, userDTO);
+    public ResponseEntity<UserDTO> updateFiscalInfo(@PathVariable Long userId, @RequestBody @Valid UserDTO userDTO) {
+        return ResponseEntity.ok(userService.updateUserInfo(userId, userDTO));
     }
 
     @PreAuthorize("hasRole('ADMIN') or (hasRole('FISCAL') and #userId == principal.id)")
     @DeleteMapping("/{userId}")
-    public void deleteFiscal(@PathVariable Long userId) {
+    public ResponseEntity<Void> deleteFiscal(@PathVariable Long userId) {
         userService.deleteUser(userId);
+        return ResponseEntity.ok().build();
     }
 }

@@ -12,4 +12,6 @@ public class TripDTO {
     private String route;
     @NotNull
     private LocalDateTime dateTime;
+    @NotNull
+    private Long passengerId;
 }

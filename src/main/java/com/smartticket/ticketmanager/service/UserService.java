@@ -2,6 +2,7 @@ package com.smartticket.ticketmanager.service;
 
 import com.smartticket.ticketmanager.dto.RegisterUserDto;
 import com.smartticket.ticketmanager.dto.UserDTO;
+import com.smartticket.ticketmanager.mappper.TicketManagerMapper;
 import com.smartticket.ticketmanager.repository.UserRepository;
 import com.smartticket.ticketmanager.repository.entities.Role;
 import com.smartticket.ticketmanager.repository.entities.User;
@@ -18,6 +19,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TicketManagerMapper mapper;
 
     public User createUser(RegisterUserDto userDTO, Role role) {
         User user = new User();
@@ -39,7 +41,7 @@ public class UserService {
     }
 
     // Update user info for any user
-    public User updateUserInfo(Long userId, UserDTO userDTO) {
+    public UserDTO updateUserInfo(Long userId, UserDTO userDTO) {
         User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         if (userDTO.getFullName() != null && !userDTO.getFullName().isEmpty()) {
@@ -55,7 +57,7 @@ public class UserService {
             user.setPhone(userDTO.getPhone());
         }
 
-        return userRepository.save(user);
+        return mapper.toUserDTO(userRepository.save(user));
     }
 
     // Delete any user

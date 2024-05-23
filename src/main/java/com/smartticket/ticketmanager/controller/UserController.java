@@ -27,8 +27,8 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or #userId == principal.id")
     @PutMapping("/{userId}")
-    public User updateUserInfoById(@PathVariable Long userId, @RequestBody @Valid UserDTO userDTO) {
-        return userService.updateUserInfo(userId, userDTO);
+    public ResponseEntity<UserDTO> updateUserInfoById(@PathVariable Long userId, @RequestBody @Valid UserDTO userDTO) {
+        return ResponseEntity.ok(userService.updateUserInfo(userId, userDTO));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or #userId == principal.id")
