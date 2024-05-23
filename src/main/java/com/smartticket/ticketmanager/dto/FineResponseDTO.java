@@ -1,18 +1,17 @@
 package com.smartticket.ticketmanager.dto;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-public class FineDTO {
-    @NotNull
-    private Long userId;
-    @NotNull
+public class FineResponseDTO {
+    private Long id;
+    private Long fiscalId;
+    private Long passengerId;
     private BigDecimal value;
+    private boolean paid;
     private String paymentMethod;
-    @NotNull
     private LocalDateTime deadlinePaymentDate;
 }

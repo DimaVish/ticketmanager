@@ -1,13 +1,13 @@
 package com.smartticket.ticketmanager.service;
 
 
+import com.smartticket.ticketmanager.dto.RegisterUserDto;
 import com.smartticket.ticketmanager.repository.UserRepository;
 import com.smartticket.ticketmanager.repository.entities.User;
 import com.smartticket.ticketmanager.security.JwtService;
 import com.smartticket.ticketmanager.security.UserDetailsServiceImpl;
 import com.smartticket.ticketmanager.security.dto.AuthRequestDTO;
 import com.smartticket.ticketmanager.security.dto.JwtResponseDTO;
-import com.smartticket.ticketmanager.dto.RegisterUserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

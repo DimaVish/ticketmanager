@@ -1,9 +1,9 @@
 package com.smartticket.ticketmanager.service;
 
+import com.smartticket.ticketmanager.dto.RegisterUserDto;
 import com.smartticket.ticketmanager.repository.UserRepository;
 import com.smartticket.ticketmanager.repository.entities.Role;
 import com.smartticket.ticketmanager.repository.entities.User;
-import com.smartticket.ticketmanager.dto.RegisterUserDto;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

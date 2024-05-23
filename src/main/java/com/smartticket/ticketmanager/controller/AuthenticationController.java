@@ -1,9 +1,9 @@
 package com.smartticket.ticketmanager.controller;
 
+import com.smartticket.ticketmanager.dto.RegisterUserDto;
 import com.smartticket.ticketmanager.repository.entities.User;
 import com.smartticket.ticketmanager.security.dto.AuthRequestDTO;
 import com.smartticket.ticketmanager.security.dto.JwtResponseDTO;
-import com.smartticket.ticketmanager.dto.RegisterUserDto;
 import com.smartticket.ticketmanager.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

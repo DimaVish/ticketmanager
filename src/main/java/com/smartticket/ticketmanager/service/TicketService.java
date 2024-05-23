@@ -2,10 +2,10 @@ package com.smartticket.ticketmanager.service;
 
 import com.smartticket.ticketmanager.dto.TicketDTO;
 import com.smartticket.ticketmanager.repository.TicketRepository;
-import com.smartticket.ticketmanager.repository.UserRepository;
-import com.smartticket.ticketmanager.repository.entities.Role;
 import com.smartticket.ticketmanager.repository.entities.Ticket;
+import com.smartticket.ticketmanager.repository.entities.Trip;
 import com.smartticket.ticketmanager.repository.entities.User;
+import com.smartticket.ticketmanager.security.model.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,13 +19,24 @@ import java.util.List;
 public class TicketService {
 
     private final TicketRepository ticketRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
+    private final TripService tripService;
+    private final QRCodeService qrCodeService;
 
-    public Ticket createTicket(TicketDTO ticketDTO) {
+    public Ticket purchaseTicket(TicketDTO ticketDTO) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        User user = userService.findUserById(customUserDetails.getId());
+        Trip trip = tripService.findTripById(ticketDTO.getTicketId());
+
         Ticket ticket = new Ticket();
-        ticket.setUser(userRepository.findById(ticketDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found")));
+        ticket.setUser(user);
+        ticket.setTrip(trip);
         ticket.setPurchaseDate(ticketDTO.getPurchaseDate());
         ticket.setExpireTime(ticketDTO.getExpireTime());
+        //Call to your QR code service and set it
         ticket.setQrCode(ticketDTO.getQrCode());
         return ticketRepository.save(ticket);
     }
@@ -52,28 +63,8 @@ public class TicketService {
     }
 
     public List<Ticket> getTicketsForPassenger(Long userId) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        User authenticatedUser = userRepository.findByUsername(authentication.getName());
-//
-//        if (!authenticatedUser.getId().equals(userId) && !authenticatedUser.getRole().equals(Role.ADMIN)) {
-//            throw new RuntimeException("You are not authorized to view these tickets");
-//        }
-
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userService.findUserById(userId);
         return ticketRepository.findByUser(user);
-    }
-
-    public Ticket purchaseTicket(TicketDTO ticketDTO) {
-//        User authenticatedUser = getAuthenticatedUser();
-
-        Ticket ticket = new Ticket();
-//        ticket.setUser(authenticatedUser);
-        ticket.setPurchaseDate(LocalDateTime.now());
-        // Assume ticket expires in 1 hour for simulation
-        ticket.setExpireTime(LocalDateTime.now().plusHours(1));
-        ticket.setQrCode(generateQrCode(ticket));
-
-        return ticketRepository.save(ticket);
     }
 
     public Ticket useTicket(Long ticketId) {

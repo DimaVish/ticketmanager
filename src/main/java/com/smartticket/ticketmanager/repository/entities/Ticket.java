@@ -1,5 +1,6 @@
 package com.smartticket.ticketmanager.repository.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,7 +16,11 @@ public class Ticket {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
     private User user;
+
+    @OneToOne(mappedBy = "ticket")
+    private Trip trip;
 
     private LocalDateTime purchaseDate;
 

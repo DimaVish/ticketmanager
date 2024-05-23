@@ -14,9 +14,8 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class PaymentService {
 
-    private final RestTemplate restTemplate;
-
     private static final String PAYMENT_PROVIDER_URL = "https://api.paymentprovider.com/payments";
+    private final RestTemplate restTemplate;
 
     public PaymentResponseDTO processPayment(PaymentRequestDTO paymentRequest) {
         HttpHeaders headers = new HttpHeaders();

@@ -1,8 +1,8 @@
 package com.smartticket.ticketmanager.service;
 
+import com.smartticket.ticketmanager.dto.RegisterUserDto;
 import com.smartticket.ticketmanager.repository.entities.Role;
 import com.smartticket.ticketmanager.repository.entities.User;
-import com.smartticket.ticketmanager.dto.RegisterUserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

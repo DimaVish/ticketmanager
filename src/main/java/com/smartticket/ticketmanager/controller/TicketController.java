@@ -17,43 +17,42 @@ public class TicketController {
 
     private final TicketService ticketService;
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public Ticket createTicket(@RequestBody @Valid TicketDTO ticketDTO) {
-        return ticketService.createTicket(ticketDTO);
+        return ticketService.purchaseTicket(ticketDTO);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<Ticket> getAllTickets() {
         return ticketService.getAllTickets();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/{ticketId}")
     public Ticket getTicketById(@PathVariable Long ticketId) {
         return ticketService.getTicketById(ticketId);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{ticketId}")
     public Ticket updateTicket(@PathVariable Long ticketId, @RequestBody @Valid TicketDTO ticketDTO) {
         return ticketService.updateTicket(ticketId, ticketDTO);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{ticketId}")
     public void deleteTicket(@PathVariable Long ticketId) {
         ticketService.deleteTicket(ticketId);
     }
 
-    @PreAuthorize("hasRole('PASSENGER') ")
+    @PreAuthorize("hasRole('ROLE_PASSENGER') ")
     @PostMapping("/purchase")
     public Ticket purchaseTicket(@RequestBody @Valid TicketDTO ticketDTO) {
         return ticketService.purchaseTicket(ticketDTO);
     }
 
-    @PreAuthorize("hasRole('PASSENGER')")
+    @PreAuthorize("hasRole('ROLE_PASSENGER') and #userId == principal.id)")
     @GetMapping("/user/{userId}")
     public List<Ticket> getTicketsForPassenger(@PathVariable Long userId) {
         return ticketService.getTicketsForPassenger(userId);
