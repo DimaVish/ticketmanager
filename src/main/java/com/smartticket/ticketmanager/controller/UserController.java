@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/users")
 @RestController
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class UserController {
 

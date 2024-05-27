@@ -8,10 +8,10 @@ import com.smartticket.ticketmanager.security.JwtService;
 import com.smartticket.ticketmanager.security.UserDetailsServiceImpl;
 import com.smartticket.ticketmanager.security.dto.AuthRequestDTO;
 import com.smartticket.ticketmanager.security.dto.JwtResponseDTO;
+import com.smartticket.ticketmanager.security.model.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,11 +46,12 @@ public class AuthenticationService {
                 )
         );
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(input.getUsername());
+        CustomUserDetails userDetails = userDetailsService.loadUserByUsername(input.getUsername());
 
         String jwtToken = jwtService.generateToken(userDetails);
 
         JwtResponseDTO jwtResponseDTO = new JwtResponseDTO();
+        jwtResponseDTO.setUserId(userDetails.getId());
         jwtResponseDTO.setAccessToken(jwtToken);
         jwtResponseDTO.setExpiresIn(jwtService.getExpirationTime());
 
