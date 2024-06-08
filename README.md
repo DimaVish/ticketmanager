@@ -1,6 +1,3 @@
-Based on the extracted files, here's a comprehensive README file for your Java Spring Boot application managing a ticket system:
-
----
 
 # Ticket Management System
 
